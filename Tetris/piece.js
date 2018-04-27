@@ -39,7 +39,20 @@ class Piece {
         }
     }
 
-    move(dir) {
+    rotate(dir) {
+        //Todo: Dew it
+    }
+
+    move(rows, dir) {
+        let canMove = true;
+
+        for (let part of this.partPieces) {
+            if (part.checkSideObstacle(rows, dir)) {
+                canMove = false;
+                return;
+            }
+        }
+
         for (let part of this.partPieces) {
             part.move(dir);
         }
@@ -90,6 +103,16 @@ class PartPiece {
 
     draw(tileSize, padding) {
         rect(this.x * tileSize + padding, this.y * tileSize + padding, tileSize, tileSize);
+    }
+
+    checkSideObstacle(rows, dir) {
+        if (this.x + dir < 0 || this.x == rows[0].tiles.length - 1) {
+            return true;;
+        } else if(rows[this.y].tiles[this.x + dir].value == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     checkObstacle(rows) {

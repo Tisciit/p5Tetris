@@ -7,21 +7,23 @@ let FRAMERATE = 4;
 
 //Global Vars
 let rows = []; //This will be an Array of Rows. Index will be Y value
-
 let piece = new Piece();
+let score = 0;
+let pScore;
 
 function setup() {
   for (let y = 0; y < HEIGHT; y++) {
     rows[y] = new Row(WIDTH, y);
   }
 
-
-  // put setup code here
   createCanvas(WIDTH * TILESIZE + 2 * PADDING, HEIGHT * TILESIZE + 2 * PADDING);
   frameRate(FRAMERATE);
+  pScore = document.createElement("PARAGRAPH");
+  document.body.appendChild(pScore);
 }
 
 function draw() {
+  pScore.innerHTML =  "Score: " + score;
   background(0);
   stroke(255);
   drawBoard();
@@ -36,32 +38,30 @@ function draw() {
   piece.movedown();
 }
 
-function keyReleased(){
+function keyReleased() {
   frameRate(FRAMERATE);
 }
 
 function keyPressed() {
   if (keyCode == LEFT_ARROW) {
-    piece.move(-1);
+    piece.move(rows, -1);
 
   } else if (keyCode == RIGHT_ARROW) {
-    piece.move(1);
-  } else if(key == " "){
+    piece.move(rows, 1);
+  } else if (key == " ") {
     frameRate(40);
   }
-  piece.draw(TILESIZE,PADDING);
+  piece.draw(TILESIZE, PADDING);
 }
 
 function updateFilled() {
   for (let rowIndex = rows.length - 1; rowIndex >= 0; rowIndex--) {
     if (rows[rowIndex].checkFilled()) {
       for (let y2 = rowIndex - 1; y2 >= 0; y2--) {
-        for (let x = 0; x < WIDTH; x++) {
-          rows[y2].tiles[x].y++;
-        }
+        rows[y2].moveDown();
       }
-      rows.splice(rowIndex);
-
+      rows.splice(rowIndex, 1);
+      score++;
       rows.unshift(new Row(WIDTH, 0));
       rowIndex++;
     }
