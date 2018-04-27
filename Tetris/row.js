@@ -30,4 +30,10 @@ class Row {
             tile.draw(tileSize, paddingLeft);
         }
     }
+
+    moveDown() {
+        for (let tile of this.tiles) {
+            tile.y++;
+        }
+    }
 }
